@@ -1,6 +1,14 @@
 library(readr)
 library(dplyr)
 
+# *ATENÇÃO*
+# O setwd("") deve ser um diretório com todos os .csv e a pasta muarray
+# Vittorio
+setwd("~/IC Alexandre") 
+
+# Tiago
+# setwd (...)
+
 # Abre os cois arrquivos que contém os dados limpos, suas expreções e log destas.
 cl_data <- read_csv("clean_data.csv")
 log_avg <- read_csv("media do LOG da expressao dentre os controles.csv")

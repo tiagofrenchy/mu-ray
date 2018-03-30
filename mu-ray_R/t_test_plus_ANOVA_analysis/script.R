@@ -67,15 +67,15 @@ if (pvalue<.05) {
 
 
 
-
-  ###############  
-  media_log <- mean(dado$log_expression)
-  
-  # DEBUG
-  print(sprintf('%8.3f  %5.1f%%', media_log, i/numberTranscripts*100), quote = FALSE)
-  
-  log_averages [nrow(log_averages) + 1,] = c(listUniqueTranscripts[i], media_log)
-}
-
-return (log_averages)
-}
+# 
+#   ###############  
+#   media_log <- mean(dado$log_expression)
+#   
+#   # DEBUG
+#   print(sprintf('%8.3f  %5.1f%%', media_log, i/numberTranscripts*100), quote = FALSE)
+#   
+#   log_averages [nrow(log_averages) + 1,] = c(listUniqueTranscripts[i], media_log)
+# }
+# 
+# return (log_averages)
+# }

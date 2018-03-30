@@ -4,9 +4,14 @@ library(readr)
 library(readxl)
 library(gsubfn)
 
+# Vittorio
+# setwd("~/IC Alexandre")
+
+#Tiago
+#setwd("~/mu-ray_data/")
 
 
-transcript_data <- read_csv("/source_files/HuGene-1_0-st-v1.na36.hg19.transcript.csv",
+transcript_data <- read_csv("HuGene-1_0-st-v1.na36.hg19.transcript.csv",
                             comment = "#")
 # Open trancript csv from affymetrix
 
@@ -32,7 +37,7 @@ nao_main <- summarized_table[ grep("main", summarized_table$category, invert = T
 summarized_table <- summarized_table[ grep("main", summarized_table$category, invert = FALSE) , ]
 # seleciona todas as linhas com "category" = main
 
-microarray_sepsis <- read_excel("/source_files/110914 RMA-Gene-Linear with annotation g.xls")
+microarray_sepsis <- read_excel("110914 RMA-Gene-Linear with annotation g.xls")
 # write.csv(microarray_sepsis_provisorio, "110914 RMA-Gene-Linear with annotation g.csv")
 # microarray_sepsis <- read_csv("110914 RMA-Gene-Linear with annotation g.csv")
 # names(microarray_sepsis) <- gsub(x = names(microarray_sepsis)(1), pattern = ", P", replacement = ", D0P")

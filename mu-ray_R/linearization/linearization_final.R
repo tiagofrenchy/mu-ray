@@ -3,7 +3,12 @@ library(dplyr)
 library(gridExtra)
 library(ggplot2)
 
+# Vittorio
 # setwd("~/IC Alexandre")
+
+#Tiago
+#setwd("~/mu-ray_data/")
+
 
 # Abre os dados
 clean_data <- read_csv("clean_data.csv")
@@ -16,8 +21,8 @@ controle["log_expression"] <- log(controle$expression)
 
 
 
-# Cria um novo DF com 4 colunas. Para cada um dos genes (transcript_cluster), teremos
-# uma média da expressão e sua descrição (tal qual herdada do data frame antigo).
+# Cria um novo DF com 2 colunas. Para cada um dos genes (transcript_cluster), teremos
+# uma média da expressão (tal qual herdada do data frame antigo).
 #
 # Faz o mesmo para média do logaritmo da expressão. 
 averages <- data.frame(transcript_cluster_id=double(), 

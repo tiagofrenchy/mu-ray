@@ -1,5 +1,5 @@
 # μ-Ray Project - Transcriptome Microarray Analysis
-<img src="https://github.com/tiagofrenchy/mu-ray/blob/master/mu-ray_logo/mu-ray_logo.png?raw=true" alt="Logo" width="25%" height="25%"/>
+<p align="center"><img src="https://github.com/tiagofrenchy/mu-ray/blob/master/mu-ray_logo/mu-ray_logo.png?raw=true" alt="Logo" width="25%" height="25%"/><p/>
 
 ## Comandos básicos para configurar o git/git-hub
 git config --global user.name "Vittorio" 

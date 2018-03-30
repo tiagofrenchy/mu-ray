@@ -27,6 +27,6 @@ write.csv(clean_data_no_dupl, "clean_data_without_duplicates.csv", row.names = F
 
 # Encontra as diferenças entre os dados iniciais e os dados sem duplicados, resultando numa lista dos
 # duplicados (tudo está computanto, nenhum dado foi perdido)
-duplicated_data <- setdiff(cl_data, data_log_no_dupl)
+duplicated_data <- setdiff(cl_data, clean_data_no_dupl)
 #View(duplicated_data)
 write.csv(duplicated_data, "duplicated_data.csv", row.names = FALSE)

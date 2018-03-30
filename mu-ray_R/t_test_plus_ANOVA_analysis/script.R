@@ -1,7 +1,8 @@
 library(readr)
 library(dplyr)
 library(ggpubr)
-library(car)
+library(Rcmdr)
+library(nortest)
 
 # Vittorio
 setwd("~/IC Alexandre")
@@ -10,11 +11,11 @@ setwd("~/IC Alexandre")
 #setwd("~/mu-ray_data/")
 
 # Abre os dados
-data <- read_csv("clean_data_without_duplicates.csv")
+clean_data <- read_csv("clean_data_without_duplicates.csv")
 
-data$expression <- log(data$expression)
+clean_data$expression <- log(clean_data$expression)
 
-listUniqueTranscripts <- unique(data$transcript_cluster_id)
+listUniqueTranscripts <- unique(clean_data$transcript_cluster_id)
 numberTranscripts <- length(listUniqueTranscripts)
 
 # 
@@ -23,9 +24,9 @@ numberTranscripts <- length(listUniqueTranscripts)
 #            %>% select(data, Dia, expression)
 
   
-dado <- data %>% filter(transcript_cluster_id == listUniqueTranscripts[1], Dia != 'D0') %>% 
+groupExpression <- clean_data %>% filter(transcript_cluster_id == listUniqueTranscripts[1], Dia != 'D0') %>% 
   select(Dia, expression)
-dado$Dia <- ordered(dado$Dia, levels = c("D1", "D2", "D3", "D4"))
+groupExpression$Dia <- ordered(dado$Dia, levels = c("D1", "D2", "D3", "D4"))
 
 # Cria boxplot das espressões
 # ggboxplot(dado, x = "Dia", y = "expression",
@@ -35,13 +36,23 @@ dado$Dia <- ordered(dado$Dia, levels = c("D1", "D2", "D3", "D4"))
 
 
 # Antes de computar o ANOVA, verificamo a normalidade dos dados e a homogeneidade das variâncias.
-leveneTest(expression ~ Dia, data = data)
+
+
+shapiro.test(groupExpression$expression)
+leveneTest(expression ~ Dia, data = groupExpression)
+
+
+################
+#h<-hist(groupExpression$expression, breaks = 7, col="white")
+###########################
+
+
+
 
 
 # Abaixo, computamos o ANOVA.
 res.aov <- aov(expression ~ Dia, data = data)
-summary(res.aov)
-pvalue <- summary(test)[[1]][["Pr(>F)"]][[1]]
+pvalue <- summary(res.aov)[[1]][["Pr(>F)"]][[1]]
 
 if (pvalue<.05) {
   # Computamos o TukeyHSD para fazer várias comparações entre pares e localizar aonde

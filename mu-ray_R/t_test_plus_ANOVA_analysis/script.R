@@ -6,7 +6,7 @@ library(ggpubr)
 setwd("~/IC Alexandre")
 
 # Tiago
-# setwd("~/Downloads/")
+#setwd("~/mu-ray_data/")
 
 # Abre os dados
 data <- read_csv("clean_data_without_duplicates.csv")

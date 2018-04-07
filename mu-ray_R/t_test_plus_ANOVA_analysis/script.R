@@ -2,12 +2,11 @@ library(readr)
 library(dplyr)
 library(car)
 
-
 # Vittorio
-setwd("~/IC Alexandre")
+# setwd("~/IC Alexandre")
 
 # Tiago
-#setwd("~/mu-ray_data/")
+# setwd("~/mu-ray_data/")
 
 # Abre os dados
 clean_data <- read_csv("clean_data_without_duplicates.csv")

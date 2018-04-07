@@ -3,7 +3,6 @@ library(dplyr)
 library(car)
 library(ggplot2)
 library(ggpubr)
-
 #library(ggsignif)
 
 
@@ -159,27 +158,25 @@ write.csv(results, "Resultado dos testes estatísticos.csv", row.names = FALSE)
 #     select(description)
 #   nome <- sprintf("%s", nomeT[1][1,])
 #   
-#   # Agora, listamos as comparações que serão realizadas.
-#   my_comparisons <- list( c("D1", "D2"), c("D2", "D3"), 
-#                           c("D3", "D4"), c("D1", "D3"), c("D1", "D4"),
-#                           c("D2", "D4"))
-#   
-#   # Calculamos a altura máxima do boxplot para que o gráfico fique com proporções
-#   # decentes.
-#   altura = max(groupExpression$expression) + 0.1
-#   
-#   # Por fim, fazemos o gráfico.
-#   setwd("~/IC Alexandre/Imgs/")
-#   png(sprintf("%s.png",nome))
-#   img <- ggboxplot(groupExpression, main = nome, x = "Dia", y = "expression",
-#                    color = "Dia", palette = "jco")+
-#     stat_compare_means(comparisons = my_comparisons, label="p.signif", hide.ns = TRUE)+
-#     stat_compare_means(method = "anova", label.y = altura)+
-#     stat_compare_means(label = "p.signif", method = "t.test",
-#                        ref.group = controlExpression)   
-#   ### TODO -- pode ser t.test acima? Não precisa ser welch? Não checamos variância...
-#   plot(img)
-#   dev.off()
+#  # Agora, listamos as comparações que serão realizadas.
+#      my_comparisons <- list( c("D1", "D2"), c("D2", "D3"), 
+#                            c("D3", "D4"), c("D1", "D3"), c("D1", "D4"),
+#                              c("D2", "D4"))
+#      
+#      # Calculamos a altura máxima do boxplot para que o gráfico fique com proporções
+#      # decentes.
+#      altura = max(groupExpression$expression) + 0.1
+#      
+#      # Por fim, fazemos o gráfico.
+#      # setwd("~/IC Alexandre/Imgs/")
+#      # setwd("~/mu-ray_data/img")
+#      svg(sprintf("%s.svg",nome))
+#      img <- ggboxplot(groupExpression, main = nome, x = "Dia", y = "expression",
+#                       color = "Dia", palette = "jco")+
+#        stat_compare_means(comparisons = my_comparisons)+
+#        stat_compare_means(method = "anova", label.y = altura)
+#      plot(img)
+#     dev.off()
 #   
   # Nos links abaixo, parece que descobriram como esconder a comparação
   # quando não é significante. Mas tá dando trabalho pra caralho para entender

@@ -1,9 +1,6 @@
 library(readr)
 library(dplyr)
 library(car)
-library(ggplot2)
-library(ggpubr)
-#library(ggsignif)
 
 
 # Vittorio
@@ -55,13 +52,6 @@ for (i in seq(numberTranscripts)) {
   # Para o gene atual, selecioanmos a sua expressão nos controles
   controlExpression <- clean_data %>% filter(transcript_cluster_id == listUniqueTranscripts[i], Dia == 'D0') %>% 
     select(expression)
-  
-  
-  # Cria boxplot das espressões
-  # ggboxplot(dado, x = "Dia", y = "expression",
-  #           color = "Dia", palette = c("#00AFBB", "#E7B800", "#FC4E07", "#000000"),
-  #           order = c("D1", "D2", "D3", "D4"),
-  #           ylab = "Expressão", xlab = "Dia")
   
   
   # Antes de computar o ANOVA, verificamos a normalidade dos dados e a homogeneidade das variâncias.
@@ -142,97 +132,3 @@ for (i in seq(numberTranscripts)) {
 }
 
 write.csv(results, "Resultado dos testes estatísticos.csv", row.names = FALSE)
-
-
-
-
-
-
-####### MÉTODOS GRAFICOS
-# 
-# # Precisa corrigir o parâmetro recebido
-# grafico <- function(???) {
-#   ###  Monta o gráfico
-#   # Primeiro, obtemos o nome do gene.
-#   nomeT <- clean_data %>% filter(transcript_cluster_id == listUniqueTranscripts[i]) %>% 
-#     select(description)
-#   nome <- sprintf("%s", nomeT[1][1,])
-#   
-#  # Agora, listamos as comparações que serão realizadas.
-#      my_comparisons <- list( c("D1", "D2"), c("D2", "D3"), 
-#                            c("D3", "D4"), c("D1", "D3"), c("D1", "D4"),
-#                              c("D2", "D4"))
-#      
-#      # Calculamos a altura máxima do boxplot para que o gráfico fique com proporções
-#      # decentes.
-#      altura = max(groupExpression$expression) + 0.1
-#      
-#      # Por fim, fazemos o gráfico.
-#      # setwd("~/IC Alexandre/Imgs/")
-#      # setwd("~/mu-ray_data/img")
-#      svg(sprintf("%s.svg",nome))
-#      img <- ggboxplot(groupExpression, main = nome, x = "Dia", y = "expression",
-#                       color = "Dia", palette = "jco")+
-#        stat_compare_means(comparisons = my_comparisons)+
-#        stat_compare_means(method = "anova", label.y = altura)
-#      plot(img)
-#     dev.off()
-#   
-  # Nos links abaixo, parece que descobriram como esconder a comparação
-  # quando não é significante. Mas tá dando trabalho pra caralho para entender
-  # # o que fizeram
-  # https://stackoverflow.com/questions/45476950/r-ggplot2-boxplots-ggpubr-stat-compare-means-not-working-properly
-  # https://stackoverflow.com/questions/45552715/r-ggplot2-perform-pairwise-tests-per-pair-in-a-facet-and-show-the-p-values-wit
-  # https://stackoverflow.com/questions/46446392/r-ggplot2-boxplots-with-significance-level-more-than-2-groups-kruskal-test-an    
-  
-  
-  # DEBUG
-  
-  
-}
-
-# 
-# stat_compare_means(comparisons = my_comparisons)+ # Add pairwise comparisons p-value
-#   stat_compare_means(label.y = 50)     # Add global p-value
-# 
-# 
-# 
-# ggboxplot(ToothGrowth, x = "dose", y = "len",
-#           color = "dose", palette = "jco")+ 
-#   stat_compare_means(comparisons = my_comparisons, label.y = c(29, 35, 40))+
-#   stat_compare_means(label.y = 45)
-# 
-# 
-# ggboxplot(groupExpression, x = "Dia", y = "expression",
-#           color = "Dia", palette = c("#00AFBB", "#E7B800", "#FC4E07", "#000000"))+ 
-#   stat_compare_means(comparisons = my_comparisons, label.y = c(29, 35, 40))+
-#   stat_compare_means(label.y = 45)
-# 
-# # ggboxplot(dado, x = "Dia", y = "expression",
-# #           color = "Dia", palette = c("#00AFBB", "#E7B800", "#FC4E07", "#000000"),
-# #           order = c("D1", "D2", "D3", "D4"),
-# #           ylab = "Expressão", xlab = "Dia")
-# 
-# #
-# # Se não der certo, rode um Kruskall Wallis
-# # kruskal.test(weight ~ group, data = my_data)
-# 
-# 
-# 
-# ################
-# #h<-hist(groupExpression$expression, breaks = 7, col="white")
-# ################
-# 
-# 
-# # 
-# #   ###############  
-# #   media_log <- mean(dado$log_expression)
-# #   
-# #   # DEBUG
-# #   print(sprintf('%8.3f  %5.1f%%', media_log, i/numberTranscripts*100), quote = FALSE)
-# #   
-# #   log_averages [nrow(log_averages) + 1,] = c(listUniqueTranscripts[i], media_log)
-# # }
-# # 
-# # return (log_averages)
-# # }

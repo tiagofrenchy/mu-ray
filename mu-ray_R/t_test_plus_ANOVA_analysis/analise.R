@@ -32,6 +32,11 @@ dadosGene <- clean_data %>% filter(transcript_cluster_id == gene)
 ##### FUNÇÃO GRÁFICA 02
 boxplot(expression ~ Dia, data = dadosGene)
 
+# Cria boxplot das espressões
+# ggboxplot(dado, x = "Dia", y = "expression",
+#           color = "Dia", palette = c("#00AFBB", "#E7B800", "#FC4E07", "#000000"),
+#           order = c("D1", "D2", "D3", "D4"),
+#           ylab = "Expressão", xlab = "Dia")
 
 
 

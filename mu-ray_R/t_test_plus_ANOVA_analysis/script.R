@@ -7,10 +7,10 @@ library(ggpubr)
 
 
 # Vittorio
-setwd("~/IC Alexandre")
-#changes were made
+# setwd("~/IC Alexandre")
+
 # Tiago
-#setwd("~/mu-ray_data/")
+# setwd("~/mu-ray_data/")
 
 # Abre os dados
 clean_data <- read_csv("clean_data_without_duplicates.csv")
@@ -73,8 +73,9 @@ for (i in seq(numberTranscripts)) {
       altura = max(groupExpression$expression) + 0.1
       
       # Por fim, fazemos o gráfico.
-      setwd("~/IC Alexandre/Imgs/")
-      png(sprintf("%s.png",nome))
+      # setwd("~/IC Alexandre/Imgs/")
+      # setwd("~/mu-ray_data/img")
+      svg(sprintf("%s.svg",nome))
       img <- ggboxplot(groupExpression, main = nome, x = "Dia", y = "expression",
                        color = "Dia", palette = "jco")+
         stat_compare_means(comparisons = my_comparisons)+

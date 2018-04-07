@@ -20,12 +20,13 @@ results <- read_csv("Resultado dos testes estatísticos.csv")
 #### Genes estudando
 dipep <- results %>% filter(transcript_cluster_id == 8002181)
 tnfr <- results %>% filter(transcript_cluster_id == 8149733)
-difCtrl2 <- results %>% filter(p_ctrlSepsis < .10^(-8)) #0.05 * 10^(-3)
 
+difCtrl2 <- results %>% filter(p_ctrlSepsis < .005 / 27000)
+difANOVA <- difCtrl2 %>% filter(p_ANOVA < 0.05 / 27000)
 
 #### Gráfico
 
-gene <- 8103769
+gene <- 7899534
 dadosGene <- clean_data %>% filter(transcript_cluster_id == gene)
 
 

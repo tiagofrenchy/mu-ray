@@ -1,7 +1,7 @@
 library(readr)
 library(dplyr)
-
-
+library(ggplot2)
+library(ggpubr)
 
 # Vittorio
 setwd("~/IC Alexandre")
@@ -9,64 +9,66 @@ setwd("~/IC Alexandre")
 # Tiago
 #setwd("~/mu-ray_data/")
 
-# Abre os dados
+# Abre os dados.
 clean_data <- read_csv("clean_data_without_duplicates.csv")
 clean_data$expression <- log(clean_data$expression)
+
+results <- read_csv("Resultado dos testes estatísticos.csv")
 
 
 
 #### Genes estudando
 dipep <- results %>% filter(transcript_cluster_id == 8002181)
-
 tnfr <- results %>% filter(transcript_cluster_id == 8149733)
-
 difCtrl2 <- results %>% filter(p_ctrlSepsis < .10^(-8)) #0.05 * 10^(-3)
 
 
 #### Gráfico
 
-T <- 8103769
-dadosGene <- clean_data %>% filter(transcript_cluster_id == T)
+gene <- 8103769
+dadosGene <- clean_data %>% filter(transcript_cluster_id == gene)
 
 
-X <- hist(dadosGene$expression)
-plot(X)
-
-img2 <- boxplot(expression ~ Dia, data = dadosGene)
-
-plot(img2)
+##### FUNÇÃO GRÁFICA 02
+boxplot(expression ~ Dia, data = dadosGene)
 
 
 
 
-####### MÉTODOS GRAFICOS
-# Primeiro, obtemos o nome do gene.
-nomeT <- clean_data %>% filter(transcript_cluster_id == T) %>% 
-     select(description)
-  nome <- sprintf("%s", nomeT[1][1,])
+
+###### FUNÇÃO GRÁFICA 01, IMPORTADA DO ARQUIVO ANTIG
+# Obtemos nome e descrição do gene.
+nomeT <- clean_data %>% filter(transcript_cluster_id == gene) %>% select(description)
+nome <- sprintf("%s", nomeT[1][1,])
+
 
 # Agora, listamos as comparações que serão realizadas.
 my_comparisons <- list( c("D1", "D2"), c("D2", "D3"),
-                          c("D3", "D4"), c("D1", "D3"), c("D1", "D4"),
-                          c("D2", "D4"))
+                        c("D3", "D4"), c("D1", "D3"), c("D1", "D4"),
+                        c("D2", "D4"))
+
+# Por fim, fazemos o gráfico.
+setwd("~/IC Alexandre/Imgs/")
+
+png(sprintf("%s.png",nome))
+
+groupExpression <- clean_data %>% filter(transcript_cluster_id == gene, Dia != 'D0') %>% 
+  select(Dia, expression)
+groupExpression$Dia <- ordered(groupExpression$Dia, levels = c("D1", "D2", "D3", "D4"))
+
+controlExpression <- clean_data %>% filter(transcript_cluster_id == gene, Dia == 'D0') %>% 
+  select(expression)
 
 # Calculamos a altura máxima do boxplot para que o gráfico fique com proporções
 # decentes.
 altura = max(groupExpression$expression) + 0.1
 
-# Por fim, fazemos o gráfico.
-setwd("~/IC Alexandre/Imgs/")
-
-#png(sprintf("%s.png",nome))
-
-img2 
-
 img <- ggboxplot(groupExpression, main = nome, x = "Dia", y = "expression",
-                   color = "Dia", palette = "jco")+
-    stat_compare_means(comparisons = my_comparisons, label="p.signif", hide.ns = TRUE)+
-    stat_compare_means(method = "anova", label.y = altura)+
-    stat_compare_means(label = "p.signif", method = "t.test",
-                       ref.group = controlExpression)
+                 color = "Dia", palette = "jco")+
+  stat_compare_means(comparisons = my_comparisons, label="p.signif", hide.ns = TRUE)+
+  stat_compare_means(method = "anova", label.y = altura)+
+  stat_compare_means(label = "p.signif", method = "t.test",
+                     ref.group = controlExpression)
 
 ### TODO -- pode ser t.test acima? Não precisa ser welch? Não checamos variância...
 plot(img)

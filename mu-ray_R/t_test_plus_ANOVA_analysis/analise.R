@@ -4,7 +4,7 @@ library(ggplot2)
 library(ggpubr)
 
 # Vittorio
-setwd("~/IC Alexandre")
+# setwd("~/IC Alexandre")
 
 # Tiago
 #setwd("~/mu-ray_data/")
@@ -15,14 +15,44 @@ clean_data$expression <- log(clean_data$expression)
 
 results <- read_csv("Resultado dos testes estatísticos.csv")
 
+p_value = .05
 
+#### Selecionando genes que respeitam os pressupostos do ANOVA
+listUniqueTranscripts <- unique(results$transcript_cluster_id)
+numberTranscripts <- length(listUniqueTranscripts)
+
+for (i in seq(numberTranscripts)) {
+   
+  results$"segue todos os pressupostos ANOVA"[i]  <- (results$normD1[i] < p_value &&
+                                                      results$normD2[i] < p_value &&
+                                                      results$normD3[i] < p_value &&
+                                                      results$normD4[i] < p_value &&
+                                                      results$normSepsis[i] < p_value &&
+                                                      results$bartSepsis[i] < p_value &&
+                                                      results$normResidual[[i]] < p_value)
+  
+
+  results$"segue todos os pressupostos T-test"[i] <- (results$normD1[i] < p_value &&
+                                                      results$normD2[i] < p_value &&
+                                                      results$normD3[i] < p_value &&
+                                                      results$normD4[i] < p_value &&
+                                                      results$normSepsis[i] < p_value &&
+                                                      results$normControl[i] < p_value) 
+}
+
+results <- results[c("transcript_cluster_id", "description", "normD1", "normD2", "normD3",
+                     "normD4", "normSepsis", "bartSepsis", "normControl", "normResidual",
+                     "segue pressupostos ANOVA", "p_ANOVA", "p_tuk21", "p_tuk31", "p_tuk41",
+                     "p_tuk32", "p_tuk42", "p_tuk43", "segue pressupostos T-test",
+                     "p_ctrlDia1", "p_ctrlDia2", "p_ctrlDia3", "p_ctrlDia4", "p_ctrlSepsis")]
 
 #### Genes estudando
 dipep <- results %>% filter(transcript_cluster_id == 8002181)
 tnfr <- results %>% filter(transcript_cluster_id == 8149733)
 
 difCtrl2 <- results %>% filter(p_ctrlSepsis < .005 / 27000)
-difANOVA <- difCtrl2 %>% filter(p_ANOVA < 0.05 / 27000)
+difANOVA <- difCtrl2 %>% filter(p_ANOVA < p_value / 27000)
+
 
 #### Gráfico
 
@@ -79,8 +109,8 @@ img <- ggboxplot(groupExpression, main = nome, x = "Dia", y = "expression",
 ### TODO -- pode ser t.test acima? Não precisa ser welch? Não checamos variância...
 plot(img)
 dev.off()
-  
-  
+
+
 #
 # Nos links abaixo, parece que descobriram como esconder a comparação
 # quando não é significante. Mas tá dando trabalho pra caralho para entender

@@ -30,8 +30,8 @@ for (i in seq(numberTranscripts)) {
                                                       results$normSepsis[i] > p_value &&
                                                       results$bartSepsis[i] > p_value &&
                                                       results$normResidual[[i]] > p_value)
-  
-
+                                                  
+                                                  
   results$"segue todos os pressupostos T-test"[i] <- (results$normD1[i] > p_value &&
                                                       results$normD2[i] > p_value &&
                                                       results$normD3[i] > p_value &&

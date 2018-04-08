@@ -21,6 +21,9 @@ p_value = .05
 listUniqueTranscripts <- unique(results$transcript_cluster_id)
 numberTranscripts <- length(listUniqueTranscripts)
 
+results[,"segue todos os pressupostos ANOVA"] <- NA
+results[,"segue todos os pressupostos T-test"] <- NA
+
 for (i in seq(numberTranscripts)) {
    
   results$"segue todos os pressupostos ANOVA"[i]  <- (results$normD1[i] > p_value &&
@@ -42,9 +45,11 @@ for (i in seq(numberTranscripts)) {
 
 results <- results[c("transcript_cluster_id", "description", "normD1", "normD2", "normD3",
                      "normD4", "normSepsis", "bartSepsis", "normControl", "normResidual",
-                     "segue pressupostos ANOVA", "p_ANOVA", "p_tuk21", "p_tuk31", "p_tuk41",
-                     "p_tuk32", "p_tuk42", "p_tuk43", "segue pressupostos T-test",
+                     "segue todos os pressupostos ANOVA", "p_ANOVA", "p_tuk21", "p_tuk31", "p_tuk41",
+                     "p_tuk32", "p_tuk42", "p_tuk43", "segue todos os pressupostos T-test",
                      "p_ctrlDia1", "p_ctrlDia2", "p_ctrlDia3", "p_ctrlDia4", "p_ctrlSepsis")]
+
+
 
 #### Genes estudando
 dipep <- results %>% filter(transcript_cluster_id == 8002181)

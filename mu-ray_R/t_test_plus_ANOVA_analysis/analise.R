@@ -23,21 +23,21 @@ numberTranscripts <- length(listUniqueTranscripts)
 
 for (i in seq(numberTranscripts)) {
    
-  results$"segue todos os pressupostos ANOVA"[i]  <- (results$normD1[i] < p_value &&
-                                                      results$normD2[i] < p_value &&
-                                                      results$normD3[i] < p_value &&
-                                                      results$normD4[i] < p_value &&
-                                                      results$normSepsis[i] < p_value &&
-                                                      results$bartSepsis[i] < p_value &&
-                                                      results$normResidual[[i]] < p_value)
+  results$"segue todos os pressupostos ANOVA"[i]  <- (results$normD1[i] > p_value &&
+                                                      results$normD2[i] > p_value &&
+                                                      results$normD3[i] > p_value &&
+                                                      results$normD4[i] > p_value &&
+                                                      results$normSepsis[i] > p_value &&
+                                                      results$bartSepsis[i] > p_value &&
+                                                      results$normResidual[[i]] > p_value)
   
 
-  results$"segue todos os pressupostos T-test"[i] <- (results$normD1[i] < p_value &&
-                                                      results$normD2[i] < p_value &&
-                                                      results$normD3[i] < p_value &&
-                                                      results$normD4[i] < p_value &&
-                                                      results$normSepsis[i] < p_value &&
-                                                      results$normControl[i] < p_value) 
+  results$"segue todos os pressupostos T-test"[i] <- (results$normD1[i] > p_value &&
+                                                      results$normD2[i] > p_value &&
+                                                      results$normD3[i] > p_value &&
+                                                      results$normD4[i] > p_value &&
+                                                      results$normSepsis[i] > p_value &&
+                                                      results$normControl[i] > p_value) 
 }
 
 results <- results[c("transcript_cluster_id", "description", "normD1", "normD2", "normD3",

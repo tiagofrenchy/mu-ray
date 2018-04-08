@@ -12,7 +12,7 @@ git clone https://github.com/tiagofrenchy/mu-ray/
 
 
 ## Como gravar modificações? Você precisa executar os três comandos, sempre, a cada modificação mesmo que mínima.
-cd mu-array
+cd mu-ray
 
 git add -A . 
 

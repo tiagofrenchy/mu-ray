@@ -4,46 +4,34 @@ library(ggplot2)
 library(ggpubr)
 
 # Vittorio
-# setwd("~/IC Alexandre")
+#setwd("~/IC Alexandre")
 
 # Tiago
 #setwd("~/mu-ray_data/")
 
-# Abre os dados.
+# Abrimos todos os dados que são utilizados. Fazemos a correção para que as expressões sejam
+# logaritímicas.
 clean_data <- read_csv("clean_data_without_duplicates.csv")
 clean_data$expression <- log(clean_data$expression)
 
 results <- read_csv("Resultado dos testes estatísticos.csv")
 
-p_value = .05
+
+# Determinamos o valor de p que será utilizado para os testes de pressupostos.
+p_assumption = .05
 
 
-#### Selecionando genes que respeitam os pressupostos do ANOVA
-
+#### Passamos por *TODOS* os genes que possuímos. Para cada um deles, sinalizamos aqueles que satisfazem
+# os pressupostos para o ANOVA e os testes T. Para isso, criamos duas colunas novas booleanas.
+#
+# TODO: não estamos sendo muito específicos; ele não satisfazer um teste T (e.g., ctrl vs dia2) e satisfazer
+# todos os outros, mas o perderíamos por causa disso. Aqui, entra aquela vantagem de sobrescrever seu valor de P
+# com -1 ou criar alguma outra ferramenta de filtragem.
 listUniqueTranscripts <- unique(results$transcript_cluster_id)
 numberTranscripts <- length(listUniqueTranscripts)
 
 results[,"segue todos os pressupostos ANOVA"]  <- NA
 results[,"segue todos os pressupostos T-test"] <- NA
-
-for (i in seq(numberTranscripts)) {
-   
-  results$"segue todos os pressupostos ANOVA"[i]  <- (results$normD1[i] > p_value &&
-                                                      results$normD2[i] > p_value &&
-                                                      results$normD3[i] > p_value &&
-                                                      results$normD4[i] > p_value &&
-                                                      results$normSepsis[i] > p_value &&
-                                                      results$bartSepsis[i] > p_value &&
-                                                      results$normResidual[[i]] > p_value)
-                                                  
-                                                  
-  results$"segue todos os pressupostos T-test"[i] <- (results$normD1[i] > p_value &&
-                                                      results$normD2[i] > p_value &&
-                                                      results$normD3[i] > p_value &&
-                                                      results$normD4[i] > p_value &&
-                                                      results$normSepsis[i] > p_value &&
-                                                      results$normControl[i] > p_value) 
-}
 
 results <- results[c("transcript_cluster_id", "description", "normD1", "normD2", "normD3",
                      "normD4", "normSepsis", "bartSepsis", "normControl", "normResidual",
@@ -51,14 +39,35 @@ results <- results[c("transcript_cluster_id", "description", "normD1", "normD2",
                      "p_tuk32", "p_tuk42", "p_tuk43", "segue todos os pressupostos T-test",
                      "p_ctrlDia1", "p_ctrlDia2", "p_ctrlDia3", "p_ctrlDia4", "p_ctrlSepsis")]
 
+for (i in seq(numberTranscripts)) {
+  results$"segue todos os pressupostos ANOVA"[i]  <- (results$normD1[i] > p_assumption &&
+                                                      results$normD2[i] > p_assumption &&
+                                                      results$normD3[i] > p_assumption &&
+                                                      results$normD4[i] > p_assumption &&
+                                                      results$normSepsis[i] > p_assumption &&
+                                                      results$bartSepsis[i] > p_assumption &&
+                                                      results$normResidual[[i]] > p_assumption)
+                                                  
+                                                  
+  
+  results$"segue todos os pressupostos T-test"[i] <- (results$normD1[i] > p_assumption &&
+                                                      results$normD2[i] > p_assumption &&
+                                                      results$normD3[i] > p_assumption &&
+                                                      results$normD4[i] > p_assumption &&
+                                                      results$normSepsis[i] > p_assumption &&
+                                                      results$normControl[i] > p_assumption) 
+}
 
-#### Genes estudando
 
-dipep <- results %>% filter(transcript_cluster_id == 8002181)
-tnfr <- results %>% filter(transcript_cluster_id == 8149733)
 
-difCtrl2 <- results %>% filter(p_ctrlSepsis < .005 / 27000)
-difANOVA <- difCtrl2 %>% filter(p_ANOVA < p_value / 27000)
+#### Uma primeira análsie ds genes. Aqui, filtramos nosso dado que somente mostrar os genes que possuem um
+# valor de p significativo em relação ao ANOVA e à sua diferença entre sepse e controle -- com uma correção
+# aproximada de Bonferroni para ambos.
+
+p_difference = 0.005
+sigResults <- results %>% filter(p_ctrlSepsis < p_difference / 27000) %>% 
+                          filter(p_ANOVA < p_difference / 27000)
+
 
 
 #### Gráfico

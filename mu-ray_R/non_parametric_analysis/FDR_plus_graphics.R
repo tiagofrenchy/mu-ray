@@ -2,6 +2,7 @@ library(readr)
 library(sgof)
 library(dplyr)
 library(ggplot2)
+library(stringr)
 
 # Vittorio
 setwd("~/IC Alexandre")
@@ -38,12 +39,14 @@ for (i in seq(numberTranscripts)) {
   reallyCoolGenes <- coolGenes %>% filter(transcript_cluster_id == listUniqueTranscripts[i])
   
   nome <- reallyCoolGenes$description[1]
+  nomeTit <- paste(substr(nome, 1, 59), "\n", substr(nome, 60, nchar(nome)), sep = "")
   id <- factor(listUniqueTranscripts[i])
   png(sprintf("[%s] - %s .png",id, nome))
   
   img <- ggplot(reallyCoolGenes, aes(x=Dia, y=expression, fill=Dia)) +
     geom_boxplot(alpha=0.3) +
     theme(legend.position="none") +
+    ggtitle(nomeTit) +
     scale_fill_brewer(palette="Dark2")
   
   print(img)
@@ -51,8 +54,8 @@ for (i in seq(numberTranscripts)) {
 }
 
 
-#######3
-
+#######3#######################################
+#######3#######################################
 
 sepsisExpression <- clean_data %>% filter(transcript_cluster_id == listUniqueTranscripts[i], Dia != 'D0') %>% 
   select(Dia, expression, Paciente)

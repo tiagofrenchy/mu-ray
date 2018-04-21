@@ -1,18 +1,15 @@
 library(readr)
 library(dplyr)
 library(tidyr)
-#library(Skillings.Mack)
+library(dunn.test)
 library(PMCMRplus)
 
 
-#library(PCMRS)
-#library(car)
-
 # Vittorio
-setwd("~/IC Alexandre")
+#setwd("~/IC Alexandre")
 
 # Tiago
-# setwd("~/mu-ray_data/")
+setwd("~/mu-ray_data/")
 
 # Abre os dados
 clean_data <- read_csv("clean_data_without_duplicates.csv")
@@ -41,13 +38,13 @@ numberTranscripts <- length(listUniqueTranscripts)
 
 for (i in seq(numberTranscripts)) {
   # Para o gene atual, selecionamos a sua expressão em todos os dias do grupo com sepse.
-  sepsisExpression <- clean_data %>% filter(transcript_cluster_id == listUniqueTranscripts[i], Dia != 'D0') %>% 
-    select(Dia, expression, Paciente)
+  sepsisExpression <- clean_data %>% filter(transcript_cluster_id == listUniqueTranscripts[i],
+                                            Dia != 'D0') %>% select(Dia, expression, Paciente)
   sepsisExpression$Dia <- ordered(sepsisExpression$Dia, levels = c("D1", "D2", "D3", "D4"))
   
   # Para o gene atual, selecionamos a sua expressão nos controles
-  controlExpression <- clean_data %>% filter(transcript_cluster_id == listUniqueTranscripts[i], Dia == 'D0') %>% 
-    select(expression, Paciente)
+  controlExpression <- clean_data %>% filter(transcript_cluster_id == listUniqueTranscripts[i],
+                                             Dia == 'D0') %>% select(expression, Paciente)
   
   # Por que pegamos o Paciente no select() para depois tirar? Pois é necesário ao spread()
   x <- sepsisExpression %>% spread(Dia, expression)
@@ -59,6 +56,7 @@ for (i in seq(numberTranscripts)) {
   
   # Computamos o DunnTest para fazer várias comparações entre pares e localizar aonde
   # está a diferença (ou mais de uma, se houver).
+  sink("/dev/null")
   DUNN <- dunn.test(sepsisExpression$expression, sepsisExpression$Dia)
   dun12 <- DUNN$P[1]
   dun13 <- DUNN$P[2]
@@ -66,25 +64,30 @@ for (i in seq(numberTranscripts)) {
   dun14 <- DUNN$P[4]
   dun24 <- DUNN$P[5]
   dun34 <- DUNN$P[6]
-
+  sink()
   # Realiza teste de Wilcoxon tanto entre a média da expressão dos controles e cada dia da sepse
   # quanto entre a primeira e a média da sepse inteira (todos os dias).
   #
   # Nota: aqui os testes NÃO são pareados.
   controleDia1 = wilcox.test(controlExpression$expression, 
-                        (sepsisExpression %>% filter(Dia == 'D1'))$expression, paired = FALSE, exact = TRUE)
+                        (sepsisExpression %>% filter(Dia == 'D1'))$expression, paired = FALSE,
+                        exact = TRUE)
   
   controleDia1 = wilcox.test(controlExpression$expression, 
-                        (sepsisExpression %>% filter(Dia == 'D1'))$expression, paired = FALSE, exact = TRUE)
+                        (sepsisExpression %>% filter(Dia == 'D1'))$expression, paired = FALSE,
+                        exact = TRUE)
   
   controleDia2 = wilcox.test(controlExpression$expression, 
-                        (sepsisExpression %>% filter(Dia == 'D2'))$expression, paired = FALSE, exact = TRUE)
+                        (sepsisExpression %>% filter(Dia == 'D2'))$expression, paired = FALSE,
+                        exact = TRUE)
   
   controleDia3 = wilcox.test(controlExpression$expression, 
-                        (sepsisExpression %>% filter(Dia == 'D3'))$expression, paired = FALSE, exact = TRUE)
+                        (sepsisExpression %>% filter(Dia == 'D3'))$expression, paired = FALSE,
+                        exact = TRUE)
   
   controleDia4 = wilcox.test(controlExpression$expression, 
-                        (sepsisExpression %>% filter(Dia == 'D4'))$expression, paired = FALSE, exact = TRUE)
+                        (sepsisExpression %>% filter(Dia == 'D4'))$expression, paired = FALSE,
+                        exact = TRUE)
   
   controleSepse = wilcox.test(controlExpression$expression, sepsisExpression$expression, 
                               paired = FALSE, exact = TRUE)

@@ -77,7 +77,7 @@ final_sepsis_table <- merge(summarized_table, microarray_sepsis_clean,
 # do projeto) em um único novo elemento.
 
 
-# Deletamos todas os genes que são controle?
+# Deletamos todos os genes que são controle?
 # 
 # length(unique(microarray_sepsis$"Probe Set ID"))
 # length(unique(nao_main$transcript_cluster_id))

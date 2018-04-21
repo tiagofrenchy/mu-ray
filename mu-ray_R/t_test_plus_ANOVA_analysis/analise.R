@@ -1,7 +1,7 @@
 library(readr)
 library(dplyr)
 library(ggplot2)
-library(ggpubr)
+library(ggsignif)
 
 # Vittorio
 #setwd("~/IC Alexandre")
@@ -60,25 +60,24 @@ for (i in seq(numberTranscripts)) {
 
 
 
-#### Uma primeira análsie ds genes. Aqui, filtramos nosso dado que somente mostrar os genes que possuem um
+#### Uma primeira análise dos genes. Aqui, filtramos nosso dado que somente mostrar os genes que possuem um
 # valor de p significativo em relação ao ANOVA e à sua diferença entre sepse e controle -- com uma correção
 # aproximada de Bonferroni para ambos.
 
-p_difference = 0.005
+p_difference = 0.05
 sigResults <- results %>% filter(p_ctrlSepsis < p_difference / 27000) %>% 
                           filter(p_ANOVA < p_difference / 27000)
 
 
 
-#### Gráfico
-
-gene <- 7899534
+#### Pegamos informação do gene.
+gene <- 8024194
 dadosGene <- clean_data %>% filter(transcript_cluster_id == gene)
 
 
 ##### FUNÇÃO GRÁFICA 02
-
-boxplot(expression ~ Dia, data = dadosGene)
+ggplot(dadosGene, aes(Dia, expression)) + geom_violin()+
+  geom_signif(comparisons = list(c("D0", "D1")), map_signif_level=TRUE)
 
 # Cria boxplot das espressões
 # ggboxplot(dado, x = "Dia", y = "expression",

@@ -6,10 +6,10 @@ library(stringr)
 
 
 # Vittorio
-#setwd("~/IC Alexandre")
+setwd("~/IC Alexandre")
 
 # Tiago
-setwd("~/mu-ray_data/")
+#setwd("~/mu-ray_data/")
 
 # Abre os dados
 clean_data <- read_csv("clean_data_without_duplicates.csv")
@@ -44,25 +44,27 @@ for (i in seq(numberTranscripts)) {
   }
   if (nchar(nomeTit)>=90){
     nomeTit <- paste(substr(nome, 1, 44), "\n", substr(nome, 45, 89),
-               "\n", substr(nome, 90, nchar(nome)), sep = "")
+                     "\n", substr(nome, 90, nchar(nome)), sep = "")
   }
+  
   id <- factor(listUniqueTranscripts[i])
   reallyCoolGenes$Dia <- gsub("D0", "Controle", reallyCoolGenes$Dia)
+  
   todos <- subset(reallyCoolGenes, Dia != 'D0')
   todos$Dia <- gsub("D1", "Sepse", todos$Dia)
   todos$Dia <- gsub("D2", "Sepse", todos$Dia)
   todos$Dia <- gsub("D3", "Sepse", todos$Dia)
   todos$Dia <- gsub("D4", "Sepse", todos$Dia)
   
-    
-    ggplot() +
+  
+  ggplot() +
     geom_boxplot(data = reallyCoolGenes, aes(x=Dia, y=expression, fill=Dia), alpha=0.5) +
     geom_boxplot(data = todos, aes(x=Dia, y=expression, fill=Dia), alpha=0.5) +
     theme(legend.position="none") +
     ggtitle(nomeTit) +
     scale_fill_brewer(palette = "Set1") +
-    ggsave(sprintf("[%s] - %s .png",id, nome), path = "~/mu-ray_data/boxplots/")
-    
+    ggsave(sprintf("[%s] - %s.png",id, nome), path = paste(getwd(), "/boxplots", sep=""))
+  
 }
 
 

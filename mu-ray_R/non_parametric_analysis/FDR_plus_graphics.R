@@ -5,57 +5,68 @@ library(ggplot2)
 library(stringr)
 
 # Vittorio
-setwd("~/IC Alexandre")
+#setwd("~/IC Alexandre")
 
 # Tiago
-# setwd("~/mu-ray_data/")
+setwd("~/mu-ray_data/")
 
 # Abre os dados
 clean_data <- read_csv("clean_data_without_duplicates.csv")
 clean_data$expression <- log(clean_data$expression)
 
-results <- read_csv("~/IC Alexandre/Resultado dos testes estatísticos NON-PARAMETRIC.csv")
+results <- read_csv("Resultado dos testes estatísticos NON-PARAMETRIC.csv")
 
+# Aplica fdr a comparacao entre os genes da sepse
 fdr_smack  <- BH(results$p_SMACK, alpha = 0.001)
 results <- results[order(results$p_SMACK),]
 id_fdr <- head(results$transcript_cluster_id, n = fdr_smack$Rejections)
 
-
+# Aplica fdr a comparacao entre controle e sepse
 fdr_ctrl   <- BH(results$p_ctrlSepsis, alpha = 0.001)
 results <- results[order(results$p_ctrlSepsis),]
 id_ctrl <- head(results$transcript_cluster_id, n = fdr_ctrl$Rejections)
 
-
+# Encontra e seleciona todos os genes que sao significantes segundo os dois fdr precedentes
 coolGenesId <- intersect(id_fdr, id_ctrl)
-
 coolGenes <- clean_data %>% filter(transcript_cluster_id %in% coolGenesId)
 
-
+# Loop que cria os plots para todos os genes selecionados precedentemente
 listUniqueTranscripts <- unique(coolGenes$transcript_cluster_id)
 numberTranscripts <- length(listUniqueTranscripts)
 
-setwd("~/IC Alexandre/Imgs/")
 for (i in seq(numberTranscripts)) {
   reallyCoolGenes <- coolGenes %>% filter(transcript_cluster_id == listUniqueTranscripts[i])
   
   nome <- reallyCoolGenes$description[1]
-  nomeTit <- paste(substr(nome, 1, 59), "\n", substr(nome, 60, nchar(nome)), sep = "")
+  if (nchar(nomeTit)<90){
+    nomeTit <- paste(substr(nome, 1, 44), "\n", substr(nome, 45, nchar(nome)), sep = "")
+  }
+  if (nchar(nomeTit)>=90){
+    nomeTit <- paste(substr(nome, 1, 44), "\n", substr(nome, 45, 89),
+               "\n", substr(nome, 90, nchar(nome)), sep = "")
+  }
   id <- factor(listUniqueTranscripts[i])
-  png(sprintf("[%s] - %s .png",id, nome))
+  reallyCoolGenes$Dia <- gsub("D0", "Controle", reallyCoolGenes$Dia)
+  todos <- subset(reallyCoolGenes, Dia != 'D0')
+  todos$Dia <- gsub("D1", "Sepse", todos$Dia)
+  todos$Dia <- gsub("D2", "Sepse", todos$Dia)
+  todos$Dia <- gsub("D3", "Sepse", todos$Dia)
+  todos$Dia <- gsub("D4", "Sepse", todos$Dia)
   
-  img <- ggplot(reallyCoolGenes, aes(x=Dia, y=expression, fill=Dia)) +
-    geom_boxplot(alpha=0.3) +
+    
+    ggplot() +
+    geom_boxplot(data = reallyCoolGenes, aes(x=Dia, y=expression, fill=Dia), alpha=0.5) +
+    geom_boxplot(data = todos, aes(x=Dia, y=expression, fill=Dia), alpha=0.5) +
     theme(legend.position="none") +
     ggtitle(nomeTit) +
-    scale_fill_brewer(palette="Dark2")
-  
-  print(img)
-  dev.off()
+    scale_fill_brewer(palette = "Set1") +
+    ggsave(sprintf("[%s] - %s .png",id, nome), path = "~/mu-ray_data/boxplots/")
+    
 }
 
 
-#######3#######################################
-#######3#######################################
+##############################################
+##############################################
 
 sepsisExpression <- clean_data %>% filter(transcript_cluster_id == listUniqueTranscripts[i], Dia != 'D0') %>% 
   select(Dia, expression, Paciente)

@@ -32,7 +32,7 @@ results <- read_csv("Resultado dos testes estatísticos NON-PARAMETRIC.csv")
 #   geom_freqpoly(data = results, aes(x=p_ctrlDia2), binwidth = NULL, color = "yellow", alpha = .5) +
 #   geom_freqpoly(data = results, aes(x=p_ctrlDia3), binwidth = NULL, color = "yellow", alpha = .5) +
 #   geom_freqpoly(data = results, aes(x=p_ctrlDia4), binwidth = NULL, color = "yellow", alpha= .5) +
-#   labs(title = "Curva de Frequencia dos p-values", x = "p-value", y = "count") +
+#   labs(title = "Curva de Frequencia dos p-values", x = "p-value", y = "count")
 
   
   

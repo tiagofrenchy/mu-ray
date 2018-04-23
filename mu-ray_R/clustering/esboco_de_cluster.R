@@ -22,21 +22,30 @@ clean_data$expression <- log(clean_data$expression)
 listUniqueTranscripts <- unique(clean_data$transcript_cluster_id)
 numberTranscripts <- length(listUniqueTranscripts)
 
+# 
+# Primeiro precisamos comparar a mudanca da media em todos os dias da sepse (e total)
+# com a media dos controles para encontrar o fold change e determinar se a mudanca
+# é positiva ou negativa (up and down-regulation. 
+# 
+# 
+# 
+# Depois, é necessário verificar se a mudanca é significativa (t test ou equivalente).
+# Constatando diferenca significativa estabelecemos o grau de mudanca por um fator
+# multiplicativo (!!! cuidado com o fato de estar usando log !!!)
+# 
+# aqui nós listamos todos os genes que são diferencialmente expressos (DEG)
+# 
+# Determinado o fold-change, podemos analizar covarianca de expressao por clustering 
+# (talvez mesmo promotor ou fator estimulante). 
+# 
+# 
+# 
+
+
 # Iniciamos o data frame da regulacao
 regulated <- data.frame(transcript_cluster_id = double(), 
                       description   = character(),
                       p_SMACK = double(),
-                      p_dun12 = double(),
-                      p_dun13 = double(),
-                      p_dun23 = double(),
-                      p_dun14 = double(),
-                      p_dun24 = double(),
-                      p_dun34 = double(),
-                      p_ctrlDia1 = double(),
-                      p_ctrlDia2 = double(),
-                      p_ctrlDia3 = double(),
-                      p_ctrlDia4 = double(),
-                      p_ctrlSepsis = double(),
                       stringsAsFactors = FALSE)
 
 

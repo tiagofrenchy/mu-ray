@@ -49,4 +49,9 @@ for (i in seq(numberTranscripts)) {
   # Para o gene atual, selecionamos a sua expressão em todos os dias do grupo controle.
   controlExpression <- clean_data %>% filter(transcript_cluster_id == listUniqueTranscripts[i],
                                             Dia == 'D0') %>% select(Dia, expression, Paciente)
+
+  
+  # 
+  
+    
 }

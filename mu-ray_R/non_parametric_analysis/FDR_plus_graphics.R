@@ -5,6 +5,7 @@ library(ggplot2)
 library(stringr)
 
 
+
 # Vittorio
 setwd("~/IC Alexandre")
 
@@ -35,17 +36,19 @@ coolGenes <- clean_data %>% filter(transcript_cluster_id %in% coolGenesId)
 listUniqueTranscripts <- unique(coolGenes$transcript_cluster_id)
 numberTranscripts <- length(listUniqueTranscripts)
 
+
 for (i in seq(numberTranscripts)) {
   reallyCoolGenes <- coolGenes %>% filter(transcript_cluster_id == listUniqueTranscripts[i])
   
-  nome <- reallyCoolGenes$description[1]
-  if (nchar(nomeTit)<90){
-    nomeTit <- paste(substr(nome, 1, 44), "\n", substr(nome, 45, nchar(nome)), sep = "")
-  }
-  if (nchar(nomeTit)>=90){
-    nomeTit <- paste(substr(nome, 1, 44), "\n", substr(nome, 45, 89),
-                     "\n", substr(nome, 90, nchar(nome)), sep = "")
-  }
+  nome <- reallyCoolGenes$description[i]
+  # if (nchar(nome)<90){
+  #   nomeTit <- paste(substr(nome, 1, 44), "\n", substr(nome, 45, nchar(nome)), sep = "")
+  # }
+  # if (nchar(nome)>=90){
+  #   nomeTit <- paste(substr(nome, 1, 44), "\n", substr(nome, 45, 89),
+  #                    "\n", substr(nome, 90, nchar(nome)), sep = "")
+  # }
+  nomeTit <- nome
   
   id <- factor(listUniqueTranscripts[i])
   reallyCoolGenes$Dia <- gsub("D0", "Controle", reallyCoolGenes$Dia)
@@ -60,8 +63,10 @@ for (i in seq(numberTranscripts)) {
   ggplot() +
     geom_boxplot(data = reallyCoolGenes, aes(x=Dia, y=expression, fill=Dia), alpha=0.5) +
     geom_boxplot(data = todos, aes(x=Dia, y=expression, fill=Dia), alpha=0.5) +
-    theme(legend.position="none") +
+    xlab("Grupos") +
+    ylab("Expressão") +
     ggtitle(nomeTit) +
+    theme(legend.position="none", plot.title = element_text(family="Times", colour="black", size=6)) +
     scale_fill_brewer(palette = "Set1") +
     ggsave(sprintf("[%s] - %s.png",id, nome), path = paste(getwd(), "/boxplots", sep=""))
   

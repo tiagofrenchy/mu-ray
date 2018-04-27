@@ -59,14 +59,19 @@ for (i in seq(numberTranscripts)) {
   todos$Dia <- gsub("D3", "Sepse", todos$Dia)
   todos$Dia <- gsub("D4", "Sepse", todos$Dia)
   
-  
+  tamTit <- 4
+  tamResto <- 5
   ggplot() +
     geom_boxplot(data = reallyCoolGenes, aes(x=Dia, y=expression, fill=Dia), alpha=0.5) +
     geom_boxplot(data = todos, aes(x=Dia, y=expression, fill=Dia), alpha=0.5) +
     xlab("Grupos") +
     ylab("Expressão") +
     ggtitle(nomeTit) +
-    theme(legend.position="none", plot.title = element_text(family="Times", colour="black", size=6)) +
+    #theme(legend.position="none", plot.title = element_text(family="Times", colour="black", size=6)) +
+    theme(legend.position="none",
+          title = element_text(size = tamTit),
+          axis.text = element_text(size = tamResto),
+          axis.title = element_text(size = tamResto)) +
     scale_fill_brewer(palette = "Set1") +
     ggsave(sprintf("[%s] - %s.png",id, nome), path = paste(getwd(), "/boxplots", sep=""))
   

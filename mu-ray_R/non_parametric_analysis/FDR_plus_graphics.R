@@ -7,10 +7,10 @@ library(stringr)
 
 
 # Vittorio
-setwd("~/IC Alexandre")
+#setwd("~/IC Alexandre")
 
 # Tiago
-#setwd("~/mu-ray_data/")
+setwd("~/mu-ray_data/")
 
 # Abre os dados
 clean_data <- read_csv("clean_data_without_duplicates.csv")
@@ -18,6 +18,25 @@ clean_data$expression <- log(clean_data$expression)
 
 results <- read_csv("Resultado dos testes estatísticos NON-PARAMETRIC.csv")
 
+# # Desenha gráfico com valores de p para
+# # visualizacao dos resultados dos testes nao parametricos
+# ggplot() +
+#   geom_freqpoly(data = results, aes(x=p_SMACK), binwidth = NULL, color = "red", alpha = 1) +
+#   geom_freqpoly(data = results, aes(x=p_ctrlSepsis), binwidth = NULL, color = "blue", alpha = 1) +
+#   geom_freqpoly(data = results, aes(x=p_dun12), binwidth = NULL, color = "green", alpha = .5) +
+#   geom_freqpoly(data = results, aes(x=p_dun13), binwidth = NULL, color = "green", alpha = .5) +
+#   geom_freqpoly(data = results, aes(x=p_dun14), binwidth = NULL, color = "green", alpha = .5) +
+#   geom_freqpoly(data = results, aes(x=p_dun23), binwidth = NULL, color = "green", alpha = .5) +
+#   geom_freqpoly(data = results, aes(x=p_dun24), binwidth = NULL, color = "green", alpha = .5) +
+#   geom_freqpoly(data = results, aes(x=p_dun34), binwidth = NULL, color = "green", alpha = .5) +
+#   geom_freqpoly(data = results, aes(x=p_ctrlDia1), binwidth = NULL, color = "yellow", alpha = .5) +
+#   geom_freqpoly(data = results, aes(x=p_ctrlDia2), binwidth = NULL, color = "yellow", alpha = .5) +
+#   geom_freqpoly(data = results, aes(x=p_ctrlDia3), binwidth = NULL, color = "yellow", alpha = .5) +
+#   geom_freqpoly(data = results, aes(x=p_ctrlDia4), binwidth = NULL, color = "yellow", alpha= .5) +
+#   labs(title = "Curva de Frequencia dos p-values", x = "p-value", y = "count")
+
+  
+  
 # Aplica fdr a comparacao entre os genes da sepse
 fdr_smack  <- BH(results$p_SMACK, alpha = 0.001)
 results <- results[order(results$p_SMACK),]

@@ -28,6 +28,8 @@ library(readr)
 library(dplyr)
 library(tidyr)
 
+inicio <- Sys.time()
+
 # Vittorio
 #setwd("~/IC Alexandre")
 
@@ -151,3 +153,13 @@ id_fdr_log <- head(regulation$transcript_cluster_id, n = fdr_log$Rejections)
 results_fdr_log <- regulation %>% filter(transcript_cluster_id %in% id_fdr_log)
 
 write.csv(regulation, "Regulação dos genes.csv", row.names = FALSE)
+
+write.csv(regulation, "Regulação dos genes - fdr valores absolutos.csv", row.names = FALSE)
+
+write.csv(regulation, "Regulação dos genes - fdr logs.csv", row.names = FALSE)
+
+fim <- Sys.time()
+
+print(fim-inicio)
+
+print("fuckYEAHHH ... #VaiPatente", quote = FALSE)

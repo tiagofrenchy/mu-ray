@@ -1,29 +1,3 @@
-    #
-    ###
-######### Aqui não tem nada ainda mas pretendo trabalhar com fold-change, DEG,
-######### coexpression network e up and down regulation
-    ###
-    #
-
-# 
-# Primeiro precisamos comparar a mudanca da media em todos os dias da sepse (e total)
-# com a media dos controles para encontrar o fold change e determinar se a mudanca
-# é positiva ou negativa (up and down-regulation). 
-# 
-# 
-# 
-# Depois, é necessário verificar se a mudanca é significativa (t test ou equivalente).
-# Constatando diferenca significativa estabelecemos o grau de mudanca por um fator
-# multiplicativo (!!! cuidado com o fato de estar usando log !!!)
-# 
-# aqui nós listamos todos os genes que são diferencialmente expressos (DEG)
-# 
-# Determinado o fold-change, podemos analizar covarianca de expressao por clustering 
-# (talvez mesmo promotor ou fator estimulante). 
-# 
-# 
-# 
-
 library(readr)
 library(dplyr)
 library(tidyr)
@@ -32,10 +6,10 @@ library(sgof)
 inicio <- Sys.time()
 
 # Vittorio
-setwd("~/IC Alexandre")
+# setwd("~/IC Alexandre")
 
 # Tiago
-#setwd("~/mu-ray_data/")
+setwd("~/mu-ray_data/")
 
 # Abre os dados
 clean_data <- read_csv("clean_data_without_duplicates.csv")
@@ -155,9 +129,9 @@ results_fdr_log <- regulation %>% filter(transcript_cluster_id %in% id_fdr_log)
 
 write.csv(regulation, "Regulação dos genes.csv", row.names = FALSE)
 
-write.csv(regulation, "Regulação dos genes - fdr valores absolutos.csv", row.names = FALSE)
+write.csv(results_fdr, "Regulação dos genes - fdr valores absolutos.csv", row.names = FALSE)
 
-write.csv(regulation, "Regulação dos genes - fdr logs.csv", row.names = FALSE)
+write.csv(results_fdr_log, "Regulação dos genes - fdr logs.csv", row.names = FALSE)
 
 fim <- Sys.time()
 

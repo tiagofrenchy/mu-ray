@@ -1,6 +1,7 @@
 library(readr)
 library(dplyr)
 library(tidyr)
+library(poibin)
 library(sgof)
 
 inicio <- Sys.time()

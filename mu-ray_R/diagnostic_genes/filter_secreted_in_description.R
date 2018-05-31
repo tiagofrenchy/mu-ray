@@ -10,8 +10,13 @@ setwd("~/IC Alexandre")
 # Tiago
 # setwd("~/mu-ray_data/")
 
-bigbigtable_only_fdr_log <- read_csv("Bigbigtable (FDR rejected and LOG expression.csv")
-secreted <- dplyr::filter(bigbigtable_only_fdr_log, grepl('secret', description))
+bigbigtable_only_fdr <- read_csv("Bigbigtable (FDR rejected and ABSOLUTE expression).csv")
+A <- dplyr::filter(bigbigtable_only_fdr_log, grepl('secret', description))
 
+bigbigtable_only_fdr_log <- read_csv("Bigbigtable (FDR rejected and LOG expression).csv")
+B <- dplyr::filter(bigbigtable_only_fdr_log, grepl('secret', description))
 
-write.csv(secreted, "Genes with potentially secreted products (LOG expression).csv", row.names = FALSE)
+secreted <- rbind(A, B)
+secreted <- secreted[!duplicated(secreted),]
+
+write.csv(secreted, "Genes with potentially secreted products.csv", row.names = FALSE)

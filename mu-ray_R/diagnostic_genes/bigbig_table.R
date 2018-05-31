@@ -53,8 +53,8 @@ for (i in seq(numberTranscripts)) {
   sepsis["log_expression"]  <- log(sepsis$expression)
   
   # Calculamos o wilcoxon-mann-whitney entre as medias de expressão
-  wilcoxon     <- wilcox.test(control$expression, sepsis$expression)
-  wilcoxon_log <- wilcox.test(control$log_expression, sepsis$log_expression)
+  wilcoxon     <- wilcox.test(control$expression, sepsis$expression, paired = FALSE)
+  wilcoxon_log <- wilcox.test(control$log_expression, sepsis$log_expression, paired = FALSE)
   
   # Calculamos a media de todas as expressões.
   control_avg <- mean(control$expression)

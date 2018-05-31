@@ -4,39 +4,41 @@ library(tidyr)
 library(poibin)
 library(sgof)
 
-inicio <- Sys.time()
-
 # Vittorio
-# setwd("~/IC Alexandre")
+setwd("~/IC Alexandre")
 
 # Tiago
-setwd("~/mu-ray_data/")
+# setwd("~/mu-ray_data/")
 
 # Abre os dados
 clean_data <- read_csv("clean_data_without_duplicates.csv")
 
 # Iniciamos o data frame da regulacao
-regulation <- data.frame(transcript_cluster_id = double(), 
+bigbigtable <- data.frame(transcript_cluster_id = double(), 
                          description = character(),
-                         media_controle = double(),
-                         sd_controle = double(),
-                         media_sepse = double(),
-                         sd_sepse = double(),
+                         reference = character(),
+                         control_avg = double(),
+                         control_sd = double(),
+                         sepsis_avg = double(),
+                         sepsis_sd = double(),
                          wilcoxon = double(),
-                         diferenca_medias = double(),
-                         razao_medias = double(),
-                         media_log_controle = double(),
-                         sd_log_controle = double(),
-                         media_log_sepse = double(),
-                         sd_log_sepse = double(),
+                         difference_avg = double(),
+                         ratio_avg = double(),
+                         control_avg_log = double(),
+                         control_sd_log = double(),
+                         sepsis_avg_log = double(),
+                         sepsis_sd_log= double(),
                          wilcoxon_log = double(),
-                         diferenca_log_medias = double(),
-                         razao_log_medias = double(),
+                         difference_avg_log= double(),
+                         ratio_avg_log = double(),
                          stringsAsFactors = FALSE)
 
 # Definimos os TCID para serem usados no loop
 listUniqueTranscripts <- unique(clean_data$transcript_cluster_id)
 numberTranscripts     <- length(listUniqueTranscripts)
+
+#DEBUG
+inicio <- Sys.time()
 
 for (i in seq(numberTranscripts)) {
   
@@ -46,63 +48,63 @@ for (i in seq(numberTranscripts)) {
   sepsis  <- clean_data %>% filter(transcript_cluster_id == listUniqueTranscripts[i],
                                   Dia == 'D1') %>% select(Dia, expression, Paciente)
   
-  # criando coluna com o nome do dataframe para fazer merge
-  control["expression_controle"] <- control$expression
-  sepsis["expression_sepsis"]    <- sepsis$expression
-  
   # Calculamos o log de todas as expressões.
-  control["log_expression_controle"] <- log(control$expression)
-  sepsis["log_expression_sepsis"]    <- log(sepsis$expression)
+  control["log_expression"] <- log(control$expression)
+  sepsis["log_expression"]  <- log(sepsis$expression)
   
   # Calculamos o wilcoxon-mann-whitney entre as medias de expressão
-  wilcoxon     <- wilcox.test(control$expression_controle, sepsis$expression_sepsis)
-  wilcoxon_log <- wilcox.test(control$log_expression_controle, sepsis$log_expression_sepsis)
+  wilcoxon     <- wilcox.test(control$expression, sepsis$expression)
+  wilcoxon_log <- wilcox.test(control$log_expression, sepsis$log_expression)
   
   # Calculamos a media de todas as expressões.
-  control_avg <- mean(control$expression_controle)
-  sepsis_avg  <- mean(sepsis$expression_sepsis)
+  control_avg <- mean(control$expression)
+  sepsis_avg  <- mean(sepsis$expression)
   
   # Calculamos o desvio padrao das medias.
-  sd_ctrl   <- sd(control$expression_controle)
-  sd_sepsis <- sd(sepsis$expression_sepsis)
+  control_sd <- sd(control$expression)
+  sepsis_sd  <- sd(sepsis$expression)
   
   # Calculamos a media dos logs de todas as expressões.
-  control_log_avg <- mean(control$log_expression_controle)
-  sepsis_log_avg  <- mean(sepsis$log_expression_sepsis)
+  control_avg_log <- mean(control$log_expression)
+  sepsis_avg_log  <- mean(sepsis$log_expression)
   
   # Calculamos o desvio padrao das medias dos logs.
-  sd_log_ctrl   <- sd(control$log_expression_controle)
-  sd_log_sepsis <- sd(sepsis$log_expression_sepsis)
+  control_sd_log   <- sd(control$log_expression)
+  sepsis_sd_log <- sd(sepsis$log_expression)
   
   # Calculamos as diferenças entre as médias.
-  diferenca_medias     <- (sepsis_avg - control_avg)
-  diferenca_log_medias <- (sepsis_log_avg - control_log_avg)
+  difference_avg     <- (sepsis_avg - control_avg)
+  difference_avg_log <- (sepsis_avg_log - control_avg_log)
   
   # Calculamos as razões entre as médias.
-  razao_medias     <- (sepsis_avg / control_avg)
-  razao_log_medias <- (sepsis_log_avg / control_log_avg)
+  ratio_avg     <- (sepsis_avg     / control_avg)
+  ratio_avg_log <- (sepsis_avg_log / control_avg_log)
   
-  # Obtemos a descrição do gene.
+  # Obtemos a descrição e a referência do gene do gene.
   descr <- clean_data %>% filter(transcript_cluster_id == listUniqueTranscripts[i]) %>% 
     select(description)
   
+  ref <- clean_data %>% filter(transcript_cluster_id == listUniqueTranscripts[i]) %>% 
+    select(gene_ref)
+  
   # Agora, inserimos todos os valores calculados no data frame.
-  regulation[nrow(regulation) + 1,]     = c(listUniqueTranscripts[i],
+  bigbigtable[nrow(bigbigtable) + 1,] = c(listUniqueTranscripts[i],
                                       c(descr[1][1,]),
+                                      c(ref[1][1,]),
                                       control_avg,
-                                      sd_ctrl,
+                                      control_sd,
                                       sepsis_avg,
-                                      sd_sepsis,
+                                      sepsis_sd,
                                       wilcoxon$p.value,
-                                      diferenca_medias,
-                                      razao_medias,
-                                      control_log_avg,
-                                      sd_log_ctrl,
-                                      sepsis_log_avg,
-                                      sd_log_sepsis,
+                                      difference_avg,
+                                      ratio_avg,
+                                      control_avg_log,
+                                      control_sd_log,
+                                      sepsis_avg_log,
+                                      sepsis_sd_log,
                                       wilcoxon_log$p.value,
-                                      diferenca_log_medias,
-                                      razao_log_medias)
+                                      difference_avg_log,
+                                      ratio_avg_log)
   
   # DEBUG
   print(sprintf('%5.1f%%', i/length(listUniqueTranscripts)*100), quote = FALSE)
@@ -118,24 +120,30 @@ for (i in seq(numberTranscripts)) {
 # A partir das rejeições (i.e., diferenças aceitas pelo FDR), filtramos os nossos resultados para
 # que possamos visualizar só estes genes
 
-fdr <- BH(regulation$wilcoxon, alpha = .001)
-regulation <- regulation[order(regulation$wilcoxon),]
-id_fdr <- head(regulation$transcript_cluster_id, n = fdr$Rejections)
-results_fdr <- regulation %>% filter(transcript_cluster_id %in% id_fdr)
+## Primeiro, sem logaritmo.
+# Ordena os valores de p do menor para o maior
+bigbigtable <- bigbigtable[order(bigbigtable$wilcoxon),]
 
-fdr_log <- BH(regulation$wilcoxon_log, alpha = .001)
-regulation <- regulation[order(regulation$wilcoxon_log),]
-id_fdr_log <- head(regulation$transcript_cluster_id, n = fdr_log$Rejections)
-results_fdr_log <- regulation %>% filter(transcript_cluster_id %in% id_fdr_log)
+# Calcula o FDR, seleciona os N genes rejeitados (pegando o head, i.e., os menores valores de P)
+# pelo transcript_id e filtra.
+fdr <- BH(bigbigtable$wilcoxon, alpha = .001)
+id_fdr <- head(bigbigtable$transcript_cluster_id, n = fdr$Rejections)
+bigbigtable_only_fdr <- bigbigtable %>% filter(transcript_cluster_id %in% id_fdr)
 
-write.csv(regulation, "Regulação dos genes.csv", row.names = FALSE)
 
-write.csv(results_fdr, "Regulação dos genes - fdr valores absolutos.csv", row.names = FALSE)
+## Agora, com logaritmo.
+bigbigtable <- bigbigtable[order(bigbigtable$wilcoxon_log),]
+fdr_log <- BH(bigbigtable$wilcoxon_log, alpha = .001)
+id_fdr_log <- head(bigbigtable$transcript_cluster_id, n = fdr_log$Rejections)
+bigbigtable_only_fdr_log <- bigbigtable %>% filter(transcript_cluster_id %in% id_fdr_log)
 
-write.csv(results_fdr_log, "Regulação dos genes - fdr logs.csv", row.names = FALSE)
 
+write.csv(bigbigtable, "Bigbigtable.csv", row.names = FALSE)
+write.csv(bigbigtable_only_fdr, "Bigbigtable (FDR rejected and ABSOLUTE expression).csv", row.names = FALSE)
+write.csv(bigbigtable_only_fdr_log, "Bigbigtable (FDR rejected and LOG expression).csv", row.names = FALSE)
+
+
+# DEBUG
 fim <- Sys.time()
-
 print(fim-inicio)
-
 print("fuckYEAHHH ... #VaiPatente", quote = FALSE)
